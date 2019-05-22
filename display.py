@@ -1,5 +1,5 @@
 from subprocess import Popen, PIPE
-from os import remove
+from os import remove, fork, execlp
 
 #constants
 XRES = 500
@@ -74,7 +74,7 @@ def display( screen ):
     remove(ppm_name)
 
 def make_animation( name ):
-    name_arg = 'anim/' + name + '*'
+    name_arg = 'anim/' + name + '/' + name + '*'
     name = name + '.gif'
     print 'Saving animation as ' + name
     f = fork()
