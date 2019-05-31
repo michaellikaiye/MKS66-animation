@@ -140,33 +140,34 @@ def run(filename):
                 print('hoi')
                 vets = []
                 nors = []
-                iz = -1
+                iz = 0
                 gg = open(args[0], 'r')
+                polymon = []
                 for line in gg.readlines():
                     words = line.split(' ')
-                    if words[0] == 'g':
-                        iz += 1
-                        vets.append([None])
-                        nors.append([None])
                     if words[0] == 'v':
-                        vets[iz].append([float(words[1]), float(words[2]), float(words[3])])
+                        vets.append([100*float(words[1]), 100*float(words[2]), 100*float(words[3])])
                     if words[0] == 'vn':
-                        nors[iz].append([float(words[1]), float(words[2]), float(words[3])])
+                        nors.append([100*float(words[1]), 100*float(words[2]), 100*float(words[3])])
                     if words[0] == 'f':
                         f = []
                         for j in range(1, len(words)):
-                            if word[j].count('/') == 0:
-                                f.append(vets[iz][int(word[j])])
+                            if words[j].count('/') == 0:
+                                f.append(vets[int(words[j])-1])
                             else:
-                                s = word[j].split('/')
-                                f.append(vets[iz][int(s[0])])
+                                s = words[j].split('/')
+                                f.append(vets[int(s[0])-1])
                         if len(f) > 2:
-                            polymon = []
                             for i in range(2, len(f)):
-                                add_polygons(polymon, f[0][0],f[0][1],f[0][1],
-                                                 f[1][0],f[1][1],f[1][2],
+                                add_polygon(polymon, f[0][0],f[0][1],f[0][2],
+                                                 f[i-1][0],f[i-1][1],f[i-1][2],
                                                  f[i][0],f[i][1],f[i][2])
-                        draw_polygons(polymon, screen, zbuffer, view, ambient, light, symbols, reflect)
+                                add_polygon(polymon, f[i][0],f[i][1],f[i][2],
+                                                 f[i-1][0],f[i-1][1],f[i-1][2],
+                                                 f[0][0],f[0][1],f[0][2])
+                                
+                matrix_mult( stack[-1], polymon)
+                draw_polygons(polymon, screen, zbuffer, view, ambient, light, symbols, reflect)
                     
                             
                         
